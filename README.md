@@ -41,7 +41,7 @@ Create following files in hadoop_config directory on your host:
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>/usr/local/hadoop_store/tmp</value>     
+		<value>/usr/local/hadoop-3.2.1/hdfs_store/tmp</value>     
 	</property>
 </configuration>
 ```
@@ -51,10 +51,10 @@ Create following files in hadoop_config directory on your host:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property>
-        <name>dfs.replication</name>
-        <value>1</value>
-    </property>
+	<property>
+		<name>dfs.replication</name>
+		<value>1</value>
+	</property>
 	<property>
 		<name>dfs.name.dir</name>
 		<value>/usr/local/hadoop-3.2.1/hdfs_store/namenode</value>
@@ -70,14 +70,14 @@ Create following files in hadoop_config directory on your host:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-    </property>
-    <property>
-        <name>yarn.nodemanager.env-whitelist</name>
-        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
-    </property>
+	<property>
+		<name>yarn.nodemanager.aux-services</name>
+		<value>mapreduce_shuffle</value>
+	</property>
+	<property>
+		<name>yarn.nodemanager.env-whitelist</name>
+		<value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+	</property>
 </configuration>
 ```
 
@@ -85,14 +85,14 @@ Create following files in hadoop_config directory on your host:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
-    </property>
-    <property>
-        <name>mapreduce.application.classpath</name>
-        <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
-    </property>
+	<property>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
+	</property>
+	<property>
+		<name>mapreduce.application.classpath</name>
+		<value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+	</property>
 </configuration>
 ```
 
