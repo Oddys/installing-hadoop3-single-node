@@ -190,7 +190,7 @@ chmod 0600 ~/.ssh/authorized_keys
 
 Format NameNode:
 ```sh
-hfds namenode -format
+hdfs namenode -format
 ```
 
 Start NameNode daemon and DataNode daemon (can be stopped with stop-dfs.sh):
