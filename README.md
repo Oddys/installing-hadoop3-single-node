@@ -1,6 +1,6 @@
 # Installing Hadoop 3 in pseudo-distributed mode
 
-## (Version 3.2.1 in Docker container from Windows 10 host)
+## (Version 3.2.2 in Docker container from Windows 10 host)
 
 ## Links
 
@@ -15,16 +15,23 @@ Download openjdk:8 image:
 docker pull openjdk:8
 ```
 
+Create a Docker volume (you'll be able to acces data in it
+if, e.g., you have messed up and need to destroy and recreate your container):
+```sh
+docker volume create myhadoop
+```
+
 (Optional) Create Docker network:
 ```sh
 docker network create --driver bridge myhadoop
 ```
 
-Run container (exposing ports for the resource manager, NameNode and
-	MapReduce history server):
-```
-docker run --name myhadoop --network myhadoop -p 8088:8088 -p 9870:9870 `
--p 19888:19888 -itd openjdk:8 bash
+Run container (mounting the created volume and exposing ports for the resource manager, NameNode and MapReduce history server,
+and, just in case you need them later, for Hue and Spark - 2nd line, ports 8888, 8889, 4040, 18080):
+```sh
+docker run --name myhadoop --network myhadoop -p 8088:8088 -p 9870:9870 -p 19888:19888 `
+-p 8888:8888 -p 8889:8889 -p 4040:4040 -p 18080:18080 `
+--mount src=myhadoop,dst=/myhadoop -itd openjdk:8 bash
 ```
 
 ## Prepare configuration files for your cluster
@@ -41,7 +48,7 @@ Create following files in hadoop_config directory on your host:
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>/usr/local/hadoop-3.2.1/hdfs_store/tmp</value>     
+		<value>/usr/local/hadoop-3.2.2/hdfs_store/tmp</value>     
 	</property>
 </configuration>
 ```
@@ -57,11 +64,11 @@ Create following files in hadoop_config directory on your host:
 	</property>
 	<property>
 		<name>dfs.name.dir</name>
-		<value>/usr/local/hadoop-3.2.1/hdfs_store/namenode</value>
+		<value>/usr/local/hadoop-3.2.2/hdfs_store/namenode</value>
 	</property>
 	<property>
 		<name>dfs.data.dir</name>
-		<value>/usr/local/hadoop-3.2.1/hdfs_store/datanode</value>
+		<value>/usr/local/hadoop-3.2.2/hdfs_store/datanode</value>
 	</property>
 </configuration>
 ```
@@ -98,7 +105,7 @@ Create following files in hadoop_config directory on your host:
 
 Copy your configuration files to the __root__ user directory in the container:
 ```sh
-docker cp hadoop_config myhadoop:/root
+docker cp hadoop_config myhadoop:/myhadoop
 ```
 
 ## Install Hadoop
@@ -108,45 +115,56 @@ Go to your container:
 docker exec -it myhadoop bash
 ```
 
-Go to /tmp direcotry:
+Go to /tmp directory:
 ```sh
 cd /tmp
 ```
 
 Download a release from one of the [Apache Download Mirrors](http://www.apache.org/dyn/closer.cgi/hadoop/common/) (replace with your link):
 ```sh
-wget https://apache.volia.net/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz
+wget https://apache.volia.net/hadoop/common/hadoop-3.2.2/hadoop-3.2.2.tar.gz
 ```
 
 Untar Hadoop files to a chosen directory:
 ```sh
-tar xzf hadoop-3.2.1.tar.gz -C /usr/local
+tar xzf hadoop-3.2.2.tar.gz -C /usr/local
 ```
 
 ## Configure Hadoop
 
 Go to the Hadoop installation directory:
 ```sh
-cd /usr/local/hadoop-3.2.1
+cd /usr/local/hadoop-3.2.2
 ```
 
 Copy the configuration files from __root__ user directory to the Hadoop configuration directory:
 ```sh
-mv /root/*.xml etc/hadoop
+mv /myhadoop/*.xml etc/hadoop
+```
+
+You might need to install a text editor, e.g. Vim:
+```sh
+apt update
+apt install vim
 ```
 
 Create HADOOP_HOME environment variable and add Hadoop binaries to PATH  
 (add these lines to ~/.bashrc file), so that you will be able to use the variable
 and call Hadoop scripts from anywhere:
 ```sh
-export HADOOP_HOME=/usr/local/hadoop-3.2.1
+export HADOOP_HOME=/usr/local/hadoop-3.2.2
 export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+```
+
+Apply changes:
+```sh
+source ~/.bashrc
 ```
 
 Put these lines to etc/hadoop/hadoop-env.sh:
 ```sh
 export JAVA_HOME=/usr/local/openjdk-8
-export HADOOP_HOME=/usr/local/hadoop-3.2.1
+export HADOOP_HOME=/usr/local/hadoop-3.2.2
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export HADOOP_LOG_DIR=$HADOOP_HOME/logs
 export HDFS_NAMENODE_USER=root
@@ -170,7 +188,7 @@ chmod -R 755 $HADOOP_HOME/hdfs_store/datanode
 ## Prepare additional software
 Install SSH:
 ```sh
-apt update
+apt update # in case you did not execute this command earlier
 apt install ssh
 ```
 
