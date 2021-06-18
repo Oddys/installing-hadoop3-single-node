@@ -139,10 +139,10 @@ cd /usr/local/hadoop-3.2.2
 
 Copy the configuration files from __root__ user directory to the Hadoop configuration directory:
 ```sh
-mv /myhadoop/*.xml etc/hadoop
+cp /myhadoop/hadoop_config/*.xml etc/hadoop
 ```
 
-You might need to install a text editor, e.g. Vim:
+You might need to install a text editor, e.g. Vim, for the following steps:
 ```sh
 apt update
 apt install vim
