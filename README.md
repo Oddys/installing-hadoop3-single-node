@@ -8,6 +8,16 @@
 
 [Install Hadoop 3.2: Setting up a Single Node Hadoop Cluster](https://medium.com/@thedsa.in/install-hadoop-3-2-setting-up-a-single-node-hadoop-cluster-22a5754bd9fc)
 
+## For Windows users
+
+Hyper-V backend seems more robust. To enable Hyper-V run in PowerShell (as Administrator):
+```sh
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+
+Reboot your machine. Uncheck *Use the WSL 2 based engine* in Docker Desktop `Settings > General` and
+restart Docker Desktop.
+
 ## Start Docker container
 
 Download openjdk:8 image:
